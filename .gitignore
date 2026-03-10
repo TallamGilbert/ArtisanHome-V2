@@ -1,0 +1,92 @@
+# ============================================
+# ARTISANHOME — Laravel + React Monorepo
+# ============================================
+
+# ============================================
+# LARAVEL (backend/)
+# ============================================
+backend/.env
+backend/.env.backup
+backend/.env.production
+backend/vendor/
+backend/node_modules/
+backend/storage/logs/*.log
+backend/storage/framework/cache/data/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*.php
+backend/public/hot
+backend/public/storage
+backend/.phpunit.result.cache
+backend/database/database.sqlite
+backend/Homestead.json
+backend/Homestead.yaml
+backend/.vagrant
+backend/auth.json
+
+# ============================================
+# REACT / VITE (frontend/)
+# ============================================
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+frontend/.env.*.local
+
+# Vite
+frontend/.vite/
+
+# ============================================
+# OS & EDITOR
+# ============================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VSCode
+.vscode/
+!.vscode/extensions.json
+
+# JetBrains / PhpStorm
+.idea/
+*.iml
+*.iws
+
+# Vim
+*.swp
+*.swo
+
+# ============================================
+# LOGS & TEMP
+# ============================================
+*.log
+*.tmp
+*.temp
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================
+# KEEP THESE (force-include)
+# ============================================
+!backend/storage/logs/.gitkeep
+!backend/storage/framework/cache/data/.gitkeep
+!backend/storage/framework/sessions/.gitkeep
+!backend/storage/framework/views/.gitkeep
+!backend/storage/app/public/.gitkeep
+!backend/database/factories/.gitkeep
+!backend/database/seeders/.gitkeep
