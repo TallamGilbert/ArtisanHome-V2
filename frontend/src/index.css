@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-brown: #6B3E26;
+    --color-brown-light: #8B5E3C;
+    --color-beige: #F5EFE6;
+    --color-cream: #FAF7F2;
+    --color-warm: #E8DDD0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-body text-artisan-charcoal bg-white;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5 {
+    @apply font-display;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::selection {
+    background-color: #6B3E26;
+    color: white;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #FAF7F2;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #D4C5B0;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6B3E26;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-artisan-brown text-white px-8 py-3.5 font-body font-medium tracking-widest uppercase text-xs hover:bg-artisan-brown-dark transition-all duration-300 inline-flex items-center gap-2;
+    letter-spacing: 0.15em;
+  }
+
+  .btn-outline {
+    @apply border border-artisan-brown text-artisan-brown px-8 py-3.5 font-body font-medium tracking-widest uppercase text-xs hover:bg-artisan-brown hover:text-white transition-all duration-300 inline-flex items-center gap-2;
+    letter-spacing: 0.15em;
+  }
+
+  .btn-ghost {
+    @apply text-artisan-brown underline underline-offset-4 font-body text-sm hover:text-artisan-brown-dark transition-colors;
+  }
+
+  .section-label {
+    @apply text-artisan-brown font-body text-xs tracking-widest uppercase font-medium;
+    letter-spacing: 0.25em;
+  }
+
+  .section-title {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl font-light leading-tight text-artisan-charcoal;
+  }
+
+  .input-field {
+    @apply w-full border border-artisan-warm-dark bg-white px-4 py-3 font-body text-sm text-artisan-charcoal placeholder-artisan-gray-soft focus:outline-none focus:border-artisan-brown transition-colors;
+  }
+
+ .product-card {
+  @apply relative bg-white overflow-hidden cursor-pointer;
+}
+
+
+  .nav-link {
+    @apply font-body text-sm tracking-wide text-artisan-charcoal hover:text-artisan-brown transition-colors duration-200;
+  }
+
+  .cart-item {
+    @apply flex gap-4 py-4 border-b border-artisan-warm;
+  }
+
+  .badge {
+    @apply inline-block px-3 py-1 text-xs font-body tracking-wider uppercase;
+  }
+
+  /* Admin specific */
+  .admin-card {
+    @apply bg-white border border-gray-100 rounded-sm p-6 shadow-sm;
+  }
+
+  .admin-table th {
+    @apply text-left text-xs font-body font-medium tracking-widest uppercase text-artisan-gray-soft py-3 px-4 border-b border-gray-100;
+    letter-spacing: 0.15em;
+  }
+
+  .admin-table td {
+    @apply py-4 px-4 text-sm font-body text-artisan-charcoal border-b border-gray-50;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-body font-medium;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+  .animate-delay-500 { animation-delay: 500ms; }
+
+  .opacity-0-start { opacity: 0; }
+
+  /* Image zoom effect */
+  .img-zoom {
+    @apply overflow-hidden;
+  }
+  .img-zoom img {
+    @apply transition-transform duration-700 ease-out;
+  }
+  .img-zoom:hover img {
+    @apply scale-105;
+  }
+
+  /* Underline animation */
+  .underline-anim {
+    @apply relative;
+  }
+  .underline-anim::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-px bg-artisan-brown transition-all duration-300;
+  }
+  .underline-anim:hover::after {
+    @apply w-full;
+  }
+}
+
+/* Custom Animations/Overlays */
+.cart-drawer {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 400ms, transform 400ms;
+}
+
+.mega-menu {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.zoom-overlay {
+  cursor: zoom-in;
+}
