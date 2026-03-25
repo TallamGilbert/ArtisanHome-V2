@@ -8,7 +8,7 @@ class AdminOrderController extends Controller
 {
     public function index(Request $request)
     {
-        $orders = Order::with(['user', 'items.product'])
+        $orders = Order::with(['user:id,name,email', 'items.product'])
             ->when($request->status, fn($q) => $q->where('status', $request->status))
             ->latest()
             ->paginate(20);
@@ -17,7 +17,7 @@ class AdminOrderController extends Controller
 
     public function show(Order $order)
     {
-        return response()->json($order->load(['user', 'items.product']));
+        return response()->json($order->load(['user:id,name,email', 'items.product']));
     }
 
     public function updateStatus(Request $request, Order $order)

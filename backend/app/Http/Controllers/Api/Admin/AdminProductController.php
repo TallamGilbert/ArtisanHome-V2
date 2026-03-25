@@ -35,8 +35,8 @@ class AdminProductController extends Controller
             'colors'         => 'nullable|array',
             'is_featured'    => 'boolean',
             'is_best_seller' => 'boolean',
-            'images'         => 'nullable|array',
-            'images.*'       => 'nullable|string',
+            'images'         => 'nullable|array|max:20',
+            'images.*'       => 'nullable|url|max:2048|regex:/^https:\/\//',
         ]);
 
         $product = Product::create([
@@ -76,8 +76,8 @@ class AdminProductController extends Controller
             'is_featured'    => 'boolean',
             'is_best_seller' => 'boolean',
             'is_active'      => 'boolean',
-            'images'         => 'nullable|array',
-            'images.*'       => 'nullable|string',
+            'images'         => 'nullable|array|max:20',
+            'images.*'       => 'nullable|url|max:2048|regex:/^https:\/\//',
         ]);
 
         $images = $data['images'] ?? null;

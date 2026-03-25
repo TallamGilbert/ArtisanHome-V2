@@ -17,21 +17,39 @@ class ReviewController extends Controller
     public function store(Request $request, Product $product)
     {
         $data = $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
+            'rating'  => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:1000',
         ]);
+
+        if ($product->reviews()->where('user_id', $request->user()->id)->exists()) {
+            return response()->json(['error' => 'You have already reviewed this product.'], 422);
+        }
+
         $review = $product->reviews()->create([
             ...$data,
             'user_id' => $request->user()->id,
         ]);
-        // Update product avg rating
-        $product->update(['rating' => $product->reviews()->avg('rating')]);
+
+        $product->update([
+            'rating'        => $product->reviews()->avg('rating'),
+            'reviews_count' => $product->reviews()->count(),
+        ]);
+
         return response()->json($review->load('user:id,name'), 201);
     }
 
     public function destroy(Review $review)
     {
+        $product = $review->product;
         $review->delete();
+
+        if ($product) {
+            $product->update([
+                'rating'        => $product->reviews()->avg('rating') ?? 0,
+                'reviews_count' => $product->reviews()->count(),
+            ]);
+        }
+
         return response()->json(['message' => 'Review deleted']);
     }
 
@@ -39,7 +57,7 @@ class ReviewController extends Controller
     {
         return response()->json(
             \App\Models\Review::with(['user:id,name,email', 'product:id,name'])
-                ->latest()->paginate(200)
+                ->latest()->paginate(25)
         );
     }
 }

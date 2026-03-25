@@ -2,9 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EmailVerificationController;
+use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\UserController;
@@ -15,8 +18,16 @@ use App\Http\Controllers\Api\Admin\AdminDashboardController;
 use App\Http\Controllers\Api\Admin\AdminCategoryController;
 
 // Public routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+
+// Password reset (public — no auth required)
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->middleware('throttle:5,1');
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->middleware('throttle:5,1');
+
+// Email verification link (signed URL, clicked from email)
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->name('verification.verify');
 
 // Products (public)
 Route::get('/products', [ProductController::class, 'index']);
@@ -38,14 +49,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::put('/user', [UserController::class, 'update']);
 
+    // Email verification resend
+    Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->middleware('throttle:3,1');
+
     // User addresses
     Route::get('/user/addresses', [UserController::class, 'addresses']);
     Route::post('/user/addresses', [UserController::class, 'addAddress']);
     Route::delete('/user/addresses/{address}', [UserController::class, 'deleteAddress']);
 
-    // Orders
+    // Orders — requires verified email to place an order
     Route::get('/orders', [OrderController::class, 'index']);
-    Route::post('/orders', [OrderController::class, 'store']);
+    Route::post('/orders', [OrderController::class, 'store'])->middleware('verified');
     Route::get('/orders/{order}', [OrderController::class, 'show']);
 
     // Reviews

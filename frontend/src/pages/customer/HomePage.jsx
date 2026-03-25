@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "../../components/common/ProductCard";
-import { MOCK_TESTIMONIALS, MOCK_ROOMS } from "../../services/mockData";
+import { MOCK_ROOMS } from "../../services/mockData";
 import { useStore } from "../../context/StoreContext";
+import { reviewService } from "../../services";
 
 // Hook for intersection observer animations
 function useInView(options = {}) {
@@ -57,7 +58,7 @@ function HeroSection() {
       label: "Bedroom Collection",
       title: "Sleep in\nPure Luxury",
       subtitle:
-        "Beds and bedroom furniture crafted from sustainably sourced hardwoods and premium textiles.",
+        "Beds and bedroom furniture crafted from locally sourced hardwoods and premium East African textiles.",
       cta: "Shop Bedroom",
       href: "/shop?category=bedroom",
     },
@@ -269,8 +270,8 @@ function CraftsmanshipSection() {
               <div className="w-12 h-px bg-artisan-brown mb-8" />
               <p className="font-body text-sm text-white/70 leading-relaxed mb-5">
                 Every ArtisanHome piece begins with the finest materials —
-                sustainably harvested hardwoods, full-grain leathers, and
-                hand-woven textiles — selected by our master craftspeople.
+                locally harvested hardwoods, full-grain East African leathers,
+                and hand-woven textiles — selected by our master craftspeople.
               </p>
               <p className="font-body text-sm text-white/70 leading-relaxed mb-10">
                 Each joint is hand-fitted, each surface hand-finished, and each
@@ -378,9 +379,32 @@ function InspirationSection() {
   );
 }
 
-// Testimonials
+// Testimonials — loads real 5-star reviews from the API
+const STAR_PATH = "M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+
 function TestimonialsSection() {
-  const [active, setActive] = useState(0);
+  const { products } = useStore();
+  const [reviews, setReviews] = useState([]);
+  const [active, setActive]   = useState(0);
+
+  useEffect(() => {
+    if (!products.length) return;
+    // Fetch reviews for the first 4 products in parallel, collect 5-star ones
+    const topIds = products.slice(0, 4).map((p) => p.id);
+    Promise.allSettled(topIds.map((id) => reviewService.getForProduct(id)))
+      .then((results) => {
+        const all = results.flatMap((r) =>
+          r.status === "fulfilled" ? (r.value.data?.data || r.value.data || []) : []
+        );
+        const fiveStar = all.filter((r) => r.rating === 5);
+        setReviews(fiveStar.slice(0, 5));
+        setActive(0);
+      });
+  }, [products]);
+
+  if (!reviews.length) return null;
+
+  const review = reviews[active];
 
   return (
     <section className="py-20 bg-artisan-charcoal">
@@ -394,47 +418,35 @@ function TestimonialsSection() {
           </h2>
         </AnimatedSection>
 
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center">
-            <div className="flex justify-center gap-1 mb-8">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <svg
-                  key={i}
-                  className="w-5 h-5 text-artisan-brown"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="flex justify-center gap-1 mb-8">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <svg key={i} className="w-5 h-5 text-artisan-brown" fill="currentColor" viewBox="0 0 20 20">
+                <path d={STAR_PATH} />
+              </svg>
+            ))}
+          </div>
+
+          <blockquote
+            key={active}
+            className="font-display text-2xl md:text-3xl font-300 text-white/90 leading-relaxed mb-8 animate-fade-in"
+          >
+            "{review.comment}"
+          </blockquote>
+
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-artisan-brown flex items-center justify-center text-white font-display text-lg">
+              {review.user?.name?.[0]?.toUpperCase() || '?'}
             </div>
-
-            <blockquote
-              key={active}
-              className="font-display text-2xl md:text-3xl font-300 text-white/90 leading-relaxed mb-8 animate-fade-in"
-            >
-              "{MOCK_TESTIMONIALS[active].text}"
-            </blockquote>
-
-            <div className="flex items-center justify-center gap-3">
-              <img
-                src={MOCK_TESTIMONIALS[active].avatar}
-                alt={MOCK_TESTIMONIALS[active].name}
-                className="w-12 h-12 rounded-full object-cover"
-              />
-              <div className="text-left">
-                <p className="font-body text-sm font-500 text-white">
-                  {MOCK_TESTIMONIALS[active].name}
-                </p>
-                <p className="font-body text-xs text-white/50">
-                  {MOCK_TESTIMONIALS[active].location}
-                </p>
-              </div>
+            <div className="text-left">
+              <p className="font-body text-sm font-500 text-white">{review.user?.name || 'Customer'}</p>
+              <p className="font-body text-xs text-white/50">{review.created_at?.slice(0, 10)}</p>
             </div>
+          </div>
 
-            {/* Dots */}
+          {reviews.length > 1 && (
             <div className="flex justify-center gap-2 mt-8">
-              {MOCK_TESTIMONIALS.map((_, i) => (
+              {reviews.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActive(i)}
@@ -442,7 +454,7 @@ function TestimonialsSection() {
                 />
               ))}
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>
@@ -454,22 +466,22 @@ function MaterialsSection() {
   const materials = [
     {
       name: "Solid Hardwoods",
-      desc: "White oak, walnut, ash — sustainably harvested and kiln-dried",
+      desc: "Mvule, mahogany, and olive — responsibly harvested from Kenyan forests",
       icon: "🌿",
     },
     {
       name: "Full-Grain Leather",
-      desc: "Top-tier hides that develop a rich patina over time",
+      desc: "Premium East African hides that develop a rich patina over time",
       icon: "✦",
     },
     {
-      name: "Belgian Linen",
-      desc: "Stone-washed for exceptional softness and durability",
+      name: "Kenyan Cotton",
+      desc: "Hand-woven textiles from local artisan communities",
       icon: "◈",
     },
     {
       name: "Natural Stone",
-      desc: "Travertine, marble, and onyx sourced from Italian quarries",
+      desc: "Marble, sandstone, and limestone sourced from Kenyan quarries",
       icon: "◆",
     },
   ];

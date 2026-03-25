@@ -14,19 +14,15 @@ export function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const user = await login(email, password);
-      toast.success(`Welcome back, ${user.name}`);
-      navigate(user.is_admin ? "/admin" : "/");
+      const userData = await login(email, password);
+      toast.success(`Welcome back, ${userData.name}`);
+      navigate(userData.is_admin ? "/admin" : "/");
     } catch (err) {
-      if (email === "admin@artisanhome.com") {
-        toast.success("Welcome, Admin");
-        navigate("/admin");
-      } else if (email) {
-        toast.success("Welcome back!");
-        navigate("/");
-      } else {
-        toast.error("Invalid credentials");
-      }
+      const msg =
+        err.response?.data?.errors?.email?.[0] ||
+        err.response?.data?.message ||
+        "Invalid credentials. Please try again.";
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -67,12 +63,6 @@ export function LoginPage() {
           <p className="font-body text-sm text-artisan-gray-soft mb-10">
             Sign in to your account to continue
           </p>
-
-          <div className="bg-artisan-beige border border-artisan-warm p-4 mb-6 font-body text-sm text-artisan-charcoal">
-            <p className="font-500 mb-1">Demo Credentials:</p>
-            <p>Customer: any@email.com / any</p>
-            <p>Admin: admin@artisanhome.com / any</p>
-          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -152,8 +142,15 @@ export function RegisterPage() {
       toast.success("Account created! Welcome to ArtisanHome.");
       navigate("/");
     } catch (err) {
-      toast.success("Welcome to ArtisanHome!");
-      navigate("/");
+      const errors = err.response?.data?.errors;
+      if (errors) {
+        const first = Object.values(errors)[0]?.[0];
+        toast.error(first || "Registration failed. Please check your details.");
+      } else {
+        toast.error(
+          err.response?.data?.message || "Something went wrong. Please try again."
+        );
+      }
     } finally {
       setLoading(false);
     }

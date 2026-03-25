@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
 import { useWishlist } from '../../context/WishlistContext'
-import { MOCK_ROOMS, MOCK_PRODUCTS } from '../../services/mockData'
+import { useStore } from '../../context/StoreContext'
+import { MOCK_ROOMS } from '../../services/mockData'
 import ProductCard from '../../components/common/ProductCard'
 
 export function InspirationPage() {
+  const { products } = useStore()
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -38,17 +41,17 @@ export function InspirationPage() {
               </p>
               {/* Featured products from room */}
               <div className="grid grid-cols-2 gap-4 mb-6">
-                {MOCK_PRODUCTS.filter(p => room.products.includes(p.id)).slice(0, 2).map(p => (
+                {products.filter(p => room.products.includes(p.id)).slice(0, 2).map(p => (
                   <Link key={p.id} to={`/product/${p.slug}`} className="flex gap-3 bg-artisan-cream p-3 hover:bg-artisan-warm transition-colors group">
-                    <img src={p.images?.[0]} alt={p.name} className="w-14 h-14 object-cover flex-shrink-0" />
+                    <img src={p.images?.[0]?.url || p.images?.[0]} alt={p.name} className="w-14 h-14 object-cover flex-shrink-0" />
                     <div>
                       <p className="font-body text-xs font-500 text-artisan-charcoal group-hover:text-artisan-brown transition-colors">{p.name}</p>
-                      <p className="font-body text-xs text-artisan-gray-soft mt-1">${p.price?.toLocaleString()}</p>
+                      <p className="font-body text-xs text-artisan-gray-soft mt-1">KSh{p.price?.toLocaleString('en-KE')}</p>
                     </div>
                   </Link>
                 ))}
               </div>
-              <Link to={`/shop?category=${MOCK_PRODUCTS.find(p => room.products.includes(p.id))?.category?.slug}`} className="btn-outline">
+              <Link to={`/shop?category=${products.find(p => room.products.includes(p.id))?.category?.slug}`} className="btn-outline">
                 Shop This Room
               </Link>
             </div>

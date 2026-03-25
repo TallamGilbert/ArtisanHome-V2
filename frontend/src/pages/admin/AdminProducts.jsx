@@ -150,9 +150,9 @@ export default function AdminProducts() {
                   </td>
                   <td><span className="font-body text-sm">{product.category?.name || '—'}</span></td>
                   <td>
-                    <span className="font-body text-sm font-500">${Number(product.price).toLocaleString()}</span>
+                    <span className="font-body text-sm font-500">KSh{Number(product.price).toLocaleString('en-KE')}</span>
                     {product.original_price && (
-                      <span className="font-body text-xs text-gray-400 line-through ml-1.5">${Number(product.original_price).toLocaleString()}</span>
+                      <span className="font-body text-xs text-gray-400 line-through ml-1.5">KSh{Number(product.original_price).toLocaleString('en-KE')}</span>
                     )}
                   </td>
                   <td>
@@ -206,11 +206,11 @@ export default function AdminProducts() {
                   <input type="text" value={form.name} onChange={e => f('name', e.target.value)} placeholder="e.g. Oslo Lounge Chair" className="input-field" />
                 </div>
                 <div>
-                  <label className="block font-body text-xs text-gray-500 mb-1.5">Price ($) *</label>
+                  <label className="block font-body text-xs text-gray-500 mb-1.5">Price (KSh) *</label>
                   <input type="number" min="0" step="0.01" value={form.price} onChange={e => f('price', e.target.value)} placeholder="0.00" className="input-field" />
                 </div>
                 <div>
-                  <label className="block font-body text-xs text-gray-500 mb-1.5">Original Price — if on sale ($)</label>
+                  <label className="block font-body text-xs text-gray-500 mb-1.5">Original Price — if on sale (KSh)</label>
                   <input type="number" min="0" step="0.01" value={form.original_price} onChange={e => f('original_price', e.target.value)} placeholder="Leave blank if not on sale" className="input-field" />
                 </div>
                 <div>

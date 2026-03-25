@@ -37,13 +37,13 @@ export function CartPage() {
                     <button onClick={() => removeItem(item.key)} className="font-body text-xs text-artisan-gray-soft hover:text-artisan-brown underline mt-2">Remove</button>
                   </div>
                 </div>
-                <p className="font-body text-sm text-artisan-charcoal">${item.price?.toLocaleString()}</p>
+                <p className="font-body text-sm text-artisan-charcoal">KSh{item.price?.toLocaleString('en-KE')}</p>
                 <div className="flex items-center border border-artisan-warm-dark w-fit">
                   <button onClick={() => updateQuantity(item.key, item.quantity - 1)} className="w-10 h-10 flex items-center justify-center text-artisan-charcoal hover:bg-artisan-cream text-lg">−</button>
                   <span className="w-10 text-center font-body text-sm">{item.quantity}</span>
                   <button onClick={() => updateQuantity(item.key, item.quantity + 1)} className="w-10 h-10 flex items-center justify-center text-artisan-charcoal hover:bg-artisan-cream text-lg">+</button>
                 </div>
-                <p className="font-body text-sm font-500 text-artisan-charcoal">${(item.price * item.quantity).toLocaleString()}</p>
+                <p className="font-body text-sm font-500 text-artisan-charcoal">KSh{(item.price * item.quantity).toLocaleString('en-KE')}</p>
               </div>
             ))}
           </div>
@@ -55,17 +55,17 @@ export function CartPage() {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between font-body text-sm">
                   <span className="text-artisan-gray-soft">Subtotal</span>
-                  <span>${total.toLocaleString()}</span>
+                  <span>KSh{total.toLocaleString('en-KE')}</span>
                 </div>
                 <div className="flex justify-between font-body text-sm">
                   <span className="text-artisan-gray-soft">Delivery</span>
-                  <span className="text-artisan-brown">{total >= 2000 ? 'Complimentary' : '$149'}</span>
+                  <span className="text-artisan-brown">{total >= 50000 ? 'Complimentary' : 'KSh2,500'}</span>
                 </div>
               </div>
               <div className="border-t border-artisan-warm-dark pt-4 mb-6">
                 <div className="flex justify-between items-baseline">
                   <span className="font-body text-sm text-artisan-charcoal">Total</span>
-                  <span className="font-display text-3xl text-artisan-charcoal">${(total + (total >= 2000 ? 0 : 149)).toLocaleString()}</span>
+                  <span className="font-display text-3xl text-artisan-charcoal">KSh{(total + (total >= 50000 ? 0 : 2500)).toLocaleString('en-KE')}</span>
                 </div>
               </div>
               <Link to="/checkout">

@@ -15,7 +15,7 @@ class AdminDashboardController extends Controller
             'total_orders' => Order::count(),
             'total_customers' => User::where('is_admin', false)->count(),
             'total_products' => Product::where('is_active', true)->count(),
-            'recent_orders' => Order::with(['user', 'items.product'])
+            'recent_orders' => Order::with(['user:id,name,email', 'items.product'])
                 ->latest()->limit(10)->get(),
             'top_products' => Product::withCount('orderItems')
                 ->orderByDesc('order_items_count')

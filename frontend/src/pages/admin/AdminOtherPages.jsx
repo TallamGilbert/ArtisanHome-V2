@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useStore } from '../../context/StoreContext'
 import ImageManager from '../../components/admin/ImageManager'
 import toast from 'react-hot-toast'
+import { userService } from '../../services'
 
 // ── CATEGORIES ────────────────────────────────────────────────────────────────
 
@@ -136,73 +137,79 @@ export function AdminCategories() {
 
 // ── CUSTOMERS ─────────────────────────────────────────────────────────────────
 
-const CUSTOMERS = [
-  { id: 1, name: 'Sarah Mitchell', email: 'sarah@example.com', city: 'New York, NY', orders: 4, totalSpent: 12480, joined: '2023-06-15' },
-  { id: 2, name: 'James Kowalski', email: 'james@example.com', city: 'Chicago, IL', orders: 2, totalSpent: 7380, joined: '2023-09-22' },
-  { id: 3, name: 'Emma Laurent', email: 'emma@example.com', city: 'San Francisco, CA', orders: 3, totalSpent: 9450, joined: '2023-11-08' },
-  { id: 4, name: 'David Park', email: 'david@example.com', city: 'Seattle, WA', orders: 1, totalSpent: 3890, joined: '2024-01-15' },
-  { id: 5, name: 'Isabelle Torres', email: 'isa@example.com', city: 'Miami, FL', orders: 5, totalSpent: 15280, joined: '2022-12-01' },
-]
-
 export function AdminCustomers() {
-  const [search, setSearch] = useState('')
-  const [selected, setSelected] = useState(null)
+  const [customers, setCustomers] = useState([])
+  const [loading, setLoading]     = useState(true)
+  const [search, setSearch]       = useState('')
+  const [selected, setSelected]   = useState(null)
 
-  const filtered = CUSTOMERS.filter(c =>
+  useEffect(() => {
+    userService.getAll()
+      .then(res => setCustomers(res.data?.data || res.data || []))
+      .catch(() => toast.error('Failed to load customers'))
+      .finally(() => setLoading(false))
+  }, [])
+
+  const filtered = customers.filter(c =>
     !search ||
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.email.toLowerCase().includes(search.toLowerCase())
+    c.name?.toLowerCase().includes(search.toLowerCase()) ||
+    c.email?.toLowerCase().includes(search.toLowerCase())
   )
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="font-display text-4xl font-400 text-artisan-charcoal">Customers</h1>
-        <p className="font-body text-sm text-gray-500 mt-1">{CUSTOMERS.length} registered customers</p>
+        <p className="font-body text-sm text-gray-500 mt-1">{customers.length} registered customers</p>
       </div>
       <div className="admin-card mb-6">
         <input type="text" placeholder="Search by name or email…" value={search} onChange={e => setSearch(e.target.value)} className="input-field max-w-md" />
       </div>
       <div className="admin-card">
-        <table className="w-full admin-table">
-          <thead><tr><th>Customer</th><th>Location</th><th>Orders</th><th>Total Spent</th><th>Since</th><th></th></tr></thead>
-          <tbody>
-            {filtered.map(c => (
-              <tr key={c.id} className="hover:bg-gray-50 transition-colors">
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-artisan-brown rounded-full flex items-center justify-center text-white font-body text-xs font-500 flex-shrink-0">{c.name[0]}</div>
-                    <div>
+        {loading ? (
+          <div className="space-y-3 p-4">
+            {Array(5).fill(0).map((_, i) => <div key={i} className="h-12 bg-gray-100 rounded animate-pulse" />)}
+          </div>
+        ) : (
+          <table className="w-full admin-table">
+            <thead><tr><th>Customer</th><th>Email</th><th>Joined</th><th></th></tr></thead>
+            <tbody>
+              {filtered.map(c => (
+                <tr key={c.id} className="hover:bg-gray-50 transition-colors">
+                  <td>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-artisan-brown rounded-full flex items-center justify-center text-white font-body text-xs font-500 flex-shrink-0">
+                        {c.name?.[0]?.toUpperCase() || '?'}
+                      </div>
                       <p className="font-body text-sm font-500 text-artisan-charcoal">{c.name}</p>
-                      <p className="font-body text-xs text-gray-400">{c.email}</p>
                     </div>
-                  </div>
-                </td>
-                <td><span className="font-body text-sm">{c.city}</span></td>
-                <td><span className="font-body text-sm">{c.orders}</span></td>
-                <td><span className="font-body text-sm font-500">${c.totalSpent.toLocaleString()}</span></td>
-                <td><span className="font-body text-xs text-gray-400">{c.joined}</span></td>
-                <td>
-                  <button onClick={() => setSelected(selected?.id === c.id ? null : c)}
-                    className="font-body text-xs text-artisan-brown hover:underline">
-                    {selected?.id === c.id ? 'Hide' : 'View'}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  </td>
+                  <td><span className="font-body text-sm text-gray-600">{c.email}</span></td>
+                  <td><span className="font-body text-xs text-gray-400">{c.created_at?.slice(0, 10)}</span></td>
+                  <td>
+                    <button onClick={() => setSelected(selected?.id === c.id ? null : c)}
+                      className="font-body text-xs text-artisan-brown hover:underline">
+                      {selected?.id === c.id ? 'Hide' : 'View'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {!filtered.length && (
+                <tr><td colSpan={4} className="text-center py-10 font-body text-sm text-gray-400">No customers found</td></tr>
+              )}
+            </tbody>
+          </table>
+        )}
         {selected && (
           <div className="border-t border-artisan-warm p-6 bg-artisan-cream">
             <div className="flex justify-between mb-4">
               <h3 className="font-body text-sm font-500">{selected.name}</h3>
               <button onClick={() => setSelected(null)} className="text-gray-400 text-sm">✕</button>
             </div>
-            <div className="grid md:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-3 gap-6">
+              <div><p className="font-body text-xs text-gray-400 mb-1">Name</p><p className="font-body text-sm">{selected.name}</p></div>
               <div><p className="font-body text-xs text-gray-400 mb-1">Email</p><p className="font-body text-sm">{selected.email}</p></div>
-              <div><p className="font-body text-xs text-gray-400 mb-1">Location</p><p className="font-body text-sm">{selected.city}</p></div>
-              <div><p className="font-body text-xs text-gray-400 mb-1">Orders</p><p className="font-display text-2xl">{selected.orders}</p></div>
-              <div><p className="font-body text-xs text-gray-400 mb-1">Lifetime Value</p><p className="font-display text-2xl text-artisan-brown">${selected.totalSpent.toLocaleString()}</p></div>
+              <div><p className="font-body text-xs text-gray-400 mb-1">Member Since</p><p className="font-body text-sm">{selected.created_at?.slice(0, 10)}</p></div>
             </div>
           </div>
         )}

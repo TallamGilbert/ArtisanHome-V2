@@ -35,27 +35,27 @@ function AnimatedSection({ children, className = "", delay = 0 }) {
 
 const TEAM = [
   {
-    name: "Eleanor Voss",
+    name: "Amina Kariuki",
     role: "Founder & Creative Director",
-    bio: "With 25 years in furniture design, Eleanor founded ArtisanHome with a singular belief: that beautiful, lasting furniture should be accessible to every home.",
+    bio: "With 25 years in furniture design, Amina founded ArtisanHome with a singular belief: that beautiful, lasting furniture should be accessible to every Kenyan home.",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400",
   },
   {
-    name: "Marcus Reid",
+    name: "James Mwangi",
     role: "Head of Craftsmanship",
-    bio: "A third-generation woodworker, Marcus oversees every piece that leaves our workshop — ensuring each one meets the standards he learned from his grandfather.",
+    bio: "A third-generation woodworker, James oversees every piece that leaves our workshop — ensuring each one meets the standards he learned from his grandfather.",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
   },
   {
-    name: "Aiko Tanaka",
+    name: "Wanjiru Odhiambo",
     role: "Lead Designer",
-    bio: "Trained in Tokyo and Milan, Aiko brings a global sensibility to each collection — blending Eastern minimalism with European warmth.",
+    bio: "Trained in Nairobi and Cape Town, Wanjiru brings a pan-African sensibility to each collection — blending East African craftsmanship with contemporary design.",
     image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400",
   },
   {
     name: "Daniel Osei",
     role: "Sustainability Director",
-    bio: "Daniel ensures every material we source meets our strict environmental standards — from FSC-certified timber to vegetable-tanned leathers.",
+    bio: "Daniel ensures every material we source meets our strict environmental standards — from responsibly harvested timber to vegetable-tanned leathers.",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400",
   },
 ];
@@ -69,7 +69,7 @@ const VALUES = [
   {
     icon: "◉",
     title: "Sustainable by Design",
-    desc: "We source only FSC-certified hardwoods, recycled metals, and natural textiles. Beautiful furniture should never come at the planet's expense.",
+    desc: "We source only responsibly harvested Kenyan hardwoods, recycled metals, and natural textiles. Beautiful furniture should never come at the planet's expense.",
   },
   {
     icon: "◻",
@@ -87,17 +87,17 @@ const MILESTONES = [
   {
     year: "2010",
     event:
-      "Founded in a small Brooklyn workshop with five pieces and a vision.",
+      "Founded in a small Nairobi workshop with five pieces and a vision.",
   },
   {
     year: "2013",
     event:
-      "Opened our first showroom in Manhattan. Sold out within the first month.",
+      "Opened our first showroom in Westlands, Nairobi. Sold out within the first month.",
   },
   {
     year: "2016",
     event:
-      "Expanded to a 40,000 sq ft production facility in upstate New York.",
+      "Expanded to a 40,000 sq ft production facility on the outskirts of Nairobi.",
   },
   {
     year: "2019",
@@ -105,12 +105,12 @@ const MILESTONES = [
   },
   {
     year: "2022",
-    event: "Reached 50,000 homes across North America and Europe.",
+    event: "Reached 50,000 homes across East Africa.",
   },
   {
     year: "2024",
     event:
-      "Certified B Corporation. Recognised as one of America's most sustainable brands.",
+      "Certified B Corporation. Recognised as one of East Africa's most sustainable brands.",
   },
 ];
 
@@ -156,8 +156,8 @@ export default function AboutPage() {
             </h2>
             <div className="w-12 h-px bg-artisan-brown mb-8" />
             <p className="font-body text-base text-artisan-gray-soft leading-relaxed mb-5">
-              ArtisanHome began in 2010 in a small Brooklyn workshop, where
-              founder Eleanor Voss and a team of five craftspeople set out to
+              ArtisanHome began in 2010 in a small Nairobi workshop, where
+              founder Amina Kariuki and a team of five craftspeople set out to
               make furniture the way it used to be made — slowly, carefully, and
               with genuine pride.
             </p>
@@ -221,8 +221,8 @@ export default function AboutPage() {
         <div className="max-w-[1440px] mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8">
           {[
             { number: "14+", label: "Years of Craft" },
-            { number: "50K+", label: "Homes Furnished" },
-            { number: "200+", label: "Artisans Employed" },
+            { number: "50K+", label: "Kenyan Homes Furnished" },
+            { number: "200+", label: "Local Artisans Employed" },
             { number: "15yr", label: "Structural Warranty" },
           ].map((stat, i) => (
             <AnimatedSection
@@ -368,14 +368,14 @@ export default function AboutPage() {
               last doesn't end up in landfill.
             </p>
             <p className="font-body text-sm text-white/70 leading-relaxed mb-10">
-              Every piece of timber we use is FSC-certified. Our leathers are
-              vegetable-tanned using traditional methods. Our packaging is 100%
-              recycled and recyclable. And we offset every tonne of carbon our
+              Every piece of timber we use is responsibly sourced from Kenyan forests.
+              Our leathers are vegetable-tanned using traditional methods. Our packaging
+              is 100% recycled and recyclable. And we offset every tonne of carbon our
               production generates.
             </p>
             <div className="grid grid-cols-3 gap-6">
               {[
-                { label: "FSC Certified", sub: "All timber sources" },
+                { label: "Responsibly Sourced", sub: "All Kenyan timber" },
                 { label: "Carbon Offset", sub: "100% of production" },
                 { label: "B Corp", sub: "Certified 2024" },
               ].map((item) => (
@@ -408,7 +408,7 @@ export default function AboutPage() {
       <section className="py-24 px-6 lg:px-12 bg-artisan-beige">
         <div className="max-w-3xl mx-auto">
           <AnimatedSection className="text-center mb-16">
-            <p className="section-label mb-3">Since 2010</p>
+            <p className="section-label mb-3">Made in Kenya, Since 2010</p>
             <h2 className="section-title">Our Journey</h2>
           </AnimatedSection>
 
@@ -483,8 +483,8 @@ export default function AboutPage() {
           <p className="section-label mb-4">Ready to Begin?</p>
           <h2 className="section-title mb-6">Find Your Perfect Piece</h2>
           <p className="font-body text-base text-artisan-gray-soft max-w-xl mx-auto mb-10">
-            Browse our full collection of handcrafted furniture, or visit one of
-            our showrooms to experience the quality in person.
+            Browse our full collection of handcrafted furniture, or visit our
+            Nairobi showroom to experience the quality in person.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link to="/shop" className="btn-primary">

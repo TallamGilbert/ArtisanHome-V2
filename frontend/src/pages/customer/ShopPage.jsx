@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../../components/common/ProductCard";
 import { useStore } from "../../context/StoreContext";
@@ -12,11 +12,11 @@ const SORT_OPTIONS = [
 ];
 
 const PRICE_RANGES = [
-  { label: "Under $500", min: 0, max: 500 },
-  { label: "$500 – $1,500", min: 500, max: 1500 },
-  { label: "$1,500 – $3,000", min: 1500, max: 3000 },
-  { label: "$3,000 – $6,000", min: 3000, max: 6000 },
-  { label: "$6,000+", min: 6000, max: Infinity },
+  { label: "Under KSh20,000", min: 0, max: 20000 },
+  { label: "KSh20,000 – KSh50,000", min: 20000, max: 50000 },
+  { label: "KSh50,000 – KSh100,000", min: 50000, max: 100000 },
+  { label: "KSh100,000 – KSh200,000", min: 100000, max: 200000 },
+  { label: "KSh200,000+", min: 200000, max: Infinity },
 ];
 
 const MATERIALS = [
@@ -40,6 +40,11 @@ export default function ShopPage() {
   const [selectedCategories, setSelectedCategories] = useState(
     searchParams.get("category") ? [searchParams.get("category")] : [],
   );
+
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    setSelectedCategories(cat ? [cat] : []);
+  }, [searchParams]);
   const [selectedPrices, setSelectedPrices] = useState([]);
   const [selectedMaterials, setSelectedMaterials] = useState([]);
   const [filtersOpen, setFiltersOpen] = useState(false);

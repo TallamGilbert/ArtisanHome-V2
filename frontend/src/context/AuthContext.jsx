@@ -1,31 +1,25 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import api from "../services/api";
-import { use } from "react";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem("artisan_token"));
 
+  // On mount: try to restore session from the httpOnly cookie.
+  // If the cookie is absent or expired the API returns 401 and we stay logged out.
   useEffect(() => {
-    if (token) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      fetchUser();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
+    fetchUser();
+  }, []);
 
   const fetchUser = async () => {
     try {
-      const response = await api.get("/user");
+      // _skipRedirect: true — a 401 here just means "not logged in", don't redirect
+      const response = await api.get("/user", { _skipRedirect: true });
       setUser(response.data);
-    } catch (err) {
-      localStorage.removeItem("artisan_token");
-      setToken(null);
-      delete api.defaults.headers.common["Authorization"];
+    } catch {
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -33,20 +27,17 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const response = await api.post("/login", { email, password });
-    const { token: newToken, user: userData } = response.data;
-    localStorage.setItem("artisan_token", newToken);
-    api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+    const { user: userData } = response.data;
+    // Cookie is set by the server response — nothing to store in JS
     localStorage.removeItem("artisan_cart");
     localStorage.removeItem("artisan_wishlist");
-    window.location.href = userData.is_admin ? "/admin" : "/";
+    setUser(userData);
+    return userData;
   };
 
   const register = async (data) => {
     const response = await api.post("/register", data);
-    const { token: newToken, user: userData } = response.data;
-    localStorage.setItem("artisan_token", newToken);
-    api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-    setToken(newToken);
+    const { user: userData } = response.data;
     setUser(userData);
     return userData;
   };
@@ -55,21 +46,15 @@ export function AuthProvider({ children }) {
     try {
       await api.post("/logout");
     } finally {
-      localStorage.removeItem("artisan_token");
       localStorage.removeItem("artisan_cart");
       localStorage.removeItem("artisan_wishlist");
-      setToken(null);
       setUser(null);
-      delete api.defaults.headers.common["Authorization"];
-
       window.location.href = "/";
     }
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, loading, token, login, register, logout }}
-    >
+    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

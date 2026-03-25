@@ -4,31 +4,33 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductImage;
 use App\Models\User;
 use App\Models\Review;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin user
+        // Admin user — set SEED_ADMIN_PASSWORD in .env before running in any shared environment
+        $adminPassword = env('SEED_ADMIN_PASSWORD');
+        if (!$adminPassword) {
+            throw new \RuntimeException('SEED_ADMIN_PASSWORD must be set in .env before seeding.');
+        }
+
         User::create([
             'name'     => 'ArtisanHome Admin',
             'email'    => 'admin@artisanhome.com',
-            'password' => Hash::make('password'),
-            'is_admin' => true,
-        ]);
+            'password' => Hash::make($adminPassword),
+        ])->forceFill(['is_admin' => true])->save();
 
-        // Sample customer
+        // Sample customer (dev/staging only — remove this block for production)
+        $customerPassword = env('SEED_CUSTOMER_PASSWORD', $adminPassword);
         User::create([
-            'name'     => 'Sarah Mitchell',
-            'email'    => 'sarah@example.com',
-            'password' => Hash::make('password'),
-            'is_admin' => false,
+            'name'     => 'Amina Wanjiru',
+            'email'    => 'amina@example.com',
+            'password' => Hash::make($customerPassword),
         ]);
 
         // Categories
@@ -50,8 +52,8 @@ class DatabaseSeeder extends Seeder
             [
                 'name'           => 'Oslo Lounge Chair',
                 'slug'           => 'oslo-lounge-chair',
-                'price'          => 2890,
-                'original_price' => 3400,
+                'price'          => 58000,
+                'original_price' => 72000,
                 'category_id'    => 1,
                 'material'       => 'Full-Grain Leather',
                 'finish'         => 'Walnut',
@@ -72,7 +74,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name'           => 'Maren Sectional Sofa',
                 'slug'           => 'maren-sectional-sofa',
-                'price'          => 6490,
+                'price'          => 148000,
                 'original_price' => null,
                 'category_id'    => 1,
                 'material'       => 'Belgian Linen',
@@ -93,7 +95,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name'           => 'Vela Dining Table',
                 'slug'           => 'vela-dining-table',
-                'price'          => 4200,
+                'price'          => 98000,
                 'original_price' => null,
                 'category_id'    => 2,
                 'material'       => 'Solid White Oak',
@@ -114,7 +116,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name'           => 'Haven Bed Frame',
                 'slug'           => 'haven-bed-frame',
-                'price'          => 3890,
+                'price'          => 88500,
                 'original_price' => null,
                 'category_id'    => 3,
                 'material'       => 'Bouclé & Solid Walnut',
@@ -135,8 +137,8 @@ class DatabaseSeeder extends Seeder
             [
                 'name'           => 'Studio Writing Desk',
                 'slug'           => 'studio-writing-desk',
-                'price'          => 1680,
-                'original_price' => 1990,
+                'price'          => 44000,
+                'original_price' => 54500,
                 'category_id'    => 4,
                 'material'       => 'Solid Walnut',
                 'finish'         => 'Oil Finish',

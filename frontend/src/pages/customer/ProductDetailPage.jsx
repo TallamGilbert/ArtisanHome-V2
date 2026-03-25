@@ -208,11 +208,11 @@ export default function ProductDetailPage() {
             </div>
             <div className="flex items-baseline gap-3 mb-6">
               <span className="font-display text-4xl text-artisan-charcoal">
-                ${product.price?.toLocaleString()}
+                KSh{product.price?.toLocaleString('en-KE')}
               </span>
               {product.original_price && (
                 <span className="font-body text-lg text-artisan-gray-soft line-through">
-                  ${product.original_price?.toLocaleString()}
+                  KSh{product.original_price?.toLocaleString('en-KE')}
                 </span>
               )}
             </div>
@@ -278,7 +278,7 @@ export default function ProductDetailPage() {
                 onClick={handleAddToCart}
                 className="btn-primary flex-1 justify-center"
               >
-                Add to Cart — ${(product.price * quantity).toLocaleString()}
+                Add to Cart — KSh{(product.price * quantity).toLocaleString('en-KE')}
               </button>
               <button
                 onClick={() => toggle(product)}

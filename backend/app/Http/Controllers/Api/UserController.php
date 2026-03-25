@@ -9,10 +9,10 @@ class UserController extends Controller
         $data = $request->validate([
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $request->user()->id,
-            'phone' => 'nullable|string',
+            'phone' => 'nullable|string|max:30',
         ]);
         $request->user()->update($data);
-        return response()->json($request->user()->fresh());
+        return response()->json($request->user()->fresh()->only(['id', 'name', 'email', 'phone', 'is_admin']));
     }
 
     public function addresses(Request $request) {

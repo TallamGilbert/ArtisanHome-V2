@@ -54,7 +54,7 @@ export default function CartDrawer() {
                       </p>
                     )}
                     <p className="font-body text-sm text-artisan-brown font-500 mt-1">
-                      ${(item.price * item.quantity).toLocaleString()}
+                      KSh{(item.price * item.quantity).toLocaleString('en-KE')}
                     </p>
                     <div className="flex items-center justify-between mt-3">
                       {/* Qty */}
@@ -83,7 +83,7 @@ export default function CartDrawer() {
           <div className="px-6 py-6 border-t border-artisan-warm bg-artisan-cream">
             <div className="flex justify-between items-baseline mb-1">
               <span className="font-body text-sm text-artisan-gray-soft">Subtotal</span>
-              <span className="font-display text-2xl text-artisan-charcoal">${total.toLocaleString()}</span>
+              <span className="font-display text-2xl text-artisan-charcoal">KSh{total.toLocaleString('en-KE')}</span>
             </div>
             <p className="font-body text-xs text-artisan-gray-soft mb-5">Shipping and taxes calculated at checkout</p>
             <Link to="/checkout" onClick={() => setIsOpen(false)}>

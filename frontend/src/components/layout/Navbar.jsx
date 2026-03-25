@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
 import { useAuth } from '../../context/AuthContext'
 import { useWishlist } from '../../context/WishlistContext'
-import { MOCK_CATEGORIES } from '../../services/mockData'
+import { useStore } from '../../context/StoreContext'
 
 const NAV_ITEMS = [
   { label: 'Shop', href: '/shop', hasMega: true },
@@ -21,6 +21,7 @@ export default function Navbar() {
   const { count, setIsOpen } = useCart()
   const { user } = useAuth()
   const { items: wishItems } = useWishlist()
+  const { categories } = useStore()
   const navigate = useNavigate()
   const searchRef = useRef(null)
 
@@ -47,7 +48,7 @@ export default function Navbar() {
     <>
       {/* Announcement bar */}
       <div className="bg-artisan-brown text-white text-center py-2.5 px-4 text-xs font-body tracking-widest uppercase" style={{ letterSpacing: '0.2em' }}>
-        Complimentary White-Glove Delivery on Orders Over $2,000 &nbsp;·&nbsp; <span className="underline cursor-pointer">Learn More</span>
+        Complimentary White-Glove Delivery on Orders Over KSh50,000 &nbsp;·&nbsp; <span className="underline cursor-pointer">Learn More</span>
       </div>
 
       <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-sm' : 'bg-white'}`}>
@@ -88,7 +89,7 @@ export default function Navbar() {
                         <div className="col-span-1">
                           <p className="section-label mb-4">Shop By Room</p>
                           <div className="space-y-2">
-                            {MOCK_CATEGORIES.map(cat => (
+                            {categories.map(cat => (
                               <Link key={cat.id} to={`/shop?category=${cat.slug}`}
                                 className="block font-body text-sm text-artisan-charcoal hover:text-artisan-brown transition-colors py-1"
                                 onClick={() => setMegaOpen(false)}
@@ -99,7 +100,7 @@ export default function Navbar() {
                           </div>
                         </div>
                         <div className="col-span-4 grid grid-cols-3 gap-4">
-                          {MOCK_CATEGORIES.slice(0, 3).map(cat => (
+                          {categories.slice(0, 3).map(cat => (
                             <Link key={cat.id} to={`/shop?category=${cat.slug}`}
                               className="group img-zoom" onClick={() => setMegaOpen(false)}
                             >
@@ -206,7 +207,7 @@ export default function Navbar() {
                 </Link>
               ))}
               <div className="border-t border-artisan-warm pt-4 space-y-2">
-                {MOCK_CATEGORIES.map(cat => (
+                {categories.map(cat => (
                   <Link key={cat.id} to={`/shop?category=${cat.slug}`}
                     className="block font-body text-xs text-artisan-gray-soft hover:text-artisan-brown py-1"
                     onClick={() => setMobileOpen(false)}

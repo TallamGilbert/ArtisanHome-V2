@@ -21,7 +21,7 @@ export default function CheckoutPage() {
     city: "",
     state: "",
     zip: "",
-    country: "United States",
+    country: "Kenya",
   });
 
   const [payment, setPayment] = useState({
@@ -36,8 +36,8 @@ export default function CheckoutPage() {
     (sum, item) => sum + parseFloat(item.price) * item.quantity,
     0,
   );
-  const delivery = subtotal >= 2000 ? 0 : 149;
-  const tax = Math.round(subtotal * 0.08);
+  const delivery = subtotal >= 50000 ? 0 : 2500;
+  const tax = Math.round(subtotal * 0.16);
   const grandTotal = subtotal + delivery + tax;
 
   const handleShippingSubmit = (e) => {
@@ -122,7 +122,7 @@ export default function CheckoutPage() {
                   {item.name} ×{item.quantity}
                 </span>
                 <span>
-                  ${(parseFloat(item.price) * item.quantity).toLocaleString()}
+                  KSh{(parseFloat(item.price) * item.quantity).toLocaleString('en-KE')}
                 </span>
               </div>
             ))}
@@ -132,16 +132,16 @@ export default function CheckoutPage() {
                 <span>
                   {displayDelivery === 0
                     ? "Complimentary"
-                    : `$${displayDelivery}`}
+                    : `KSh${displayDelivery}`}
                 </span>
               </div>
               <div className="flex justify-between font-body text-sm text-artisan-gray-soft">
                 <span>Tax</span>
-                <span>${displayTax.toLocaleString()}</span>
+                <span>KSh{displayTax.toLocaleString('en-KE')}</span>
               </div>
               <div className="flex justify-between font-body text-sm font-500 pt-2 border-t border-artisan-warm">
                 <span>Total</span>
-                <span>${displayTotal.toLocaleString()}</span>
+                <span>KSh{displayTotal.toLocaleString('en-KE')}</span>
               </div>
             </div>
           </div>
@@ -248,6 +248,7 @@ export default function CheckoutPage() {
                   </label>
                   <input
                     type="tel"
+                    placeholder="+254 7XX XXX XXX"
                     value={shipping.phone}
                     onChange={(e) =>
                       setShipping((p) => ({ ...p, phone: e.target.value }))
@@ -286,7 +287,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block font-body text-xs text-artisan-gray-soft mb-1.5">
-                      State
+                      County
                     </label>
                     <input
                       type="text"
@@ -300,7 +301,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block font-body text-xs text-artisan-gray-soft mb-1.5">
-                      ZIP
+                      Postal Code
                     </label>
                     <input
                       type="text"
@@ -430,7 +431,7 @@ export default function CheckoutPage() {
                         Processing...
                       </span>
                     ) : (
-                      `Place Order — $${grandTotal.toLocaleString()}`
+                      `Place Order — KSh${grandTotal.toLocaleString('en-KE')}`
                     )}
                   </button>
                 </div>
@@ -465,14 +466,13 @@ export default function CheckoutPage() {
                         {item.name}
                       </p>
                       <p className="font-body text-xs text-artisan-gray-soft mt-0.5">
-                        ${parseFloat(item.price).toLocaleString()} ea.
+                        KSh{parseFloat(item.price).toLocaleString('en-KE')} ea.
                       </p>
                     </div>
                     <p className="font-body text-sm text-artisan-charcoal">
-                      $
-                      {(
+                      KSh{(
                         parseFloat(item.price) * item.quantity
-                      ).toLocaleString()}
+                      ).toLocaleString('en-KE')}
                     </p>
                   </div>
                 ))}
@@ -480,7 +480,7 @@ export default function CheckoutPage() {
               <div className="border-t border-artisan-warm-dark pt-4 space-y-2">
                 <div className="flex justify-between font-body text-sm">
                   <span className="text-artisan-gray-soft">Subtotal</span>
-                  <span>${displaySubtotal.toLocaleString()}</span>
+                  <span>KSh{displaySubtotal.toLocaleString('en-KE')}</span>
                 </div>
                 <div className="flex justify-between font-body text-sm">
                   <span className="text-artisan-gray-soft">Delivery</span>
@@ -491,18 +491,18 @@ export default function CheckoutPage() {
                   >
                     {displayDelivery === 0
                       ? "Complimentary"
-                      : `$${displayDelivery}`}
+                      : `KSh${displayDelivery}`}
                   </span>
                 </div>
                 <div className="flex justify-between font-body text-sm">
-                  <span className="text-artisan-gray-soft">Tax (8%)</span>
-                  <span>${displayTax.toLocaleString()}</span>
+                  <span className="text-artisan-gray-soft">VAT (16%)</span>
+                  <span>KSh{displayTax.toLocaleString('en-KE')}</span>
                 </div>
               </div>
               <div className="border-t border-artisan-warm-dark mt-4 pt-4 flex justify-between items-baseline">
                 <span className="font-body text-sm font-500">Total</span>
                 <span className="font-display text-2xl text-artisan-charcoal">
-                  ${displayTotal.toLocaleString()}
+                  KSh{displayTotal.toLocaleString('en-KE')}
                 </span>
               </div>
             </div>
